@@ -1,0 +1,12 @@
+{
+	"cSpell.words": [
+		"fastapi",
+		"sqlalchemy"
+	],
+	"cSpell.ignoreWords": [
+		"EXASG",
+		"PNDA",
+		"authcode",
+		"fyers"
+	]
+}

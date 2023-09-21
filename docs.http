@@ -1,0 +1,3 @@
+###
+# @name update_stock_data
+POST http://127.0.0.1:3000/stocks/NSE:FINNIFTY-INDEX
