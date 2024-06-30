@@ -8,14 +8,15 @@ packages = [{include = "analyze_stocks"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = "^0.96.1"
+fastapi = "^0.110.3"
 sqlalchemy = "^2.0.16"
 psycopg2-binary = "^2.9.6"
-fyers-apiv2 = "^2.0.6"
 hypercorn = "^0.14.3"
 alembic = "^1.11.1"
 black = "^23.3.0"
 ipykernel = "^6.23.1"
+greenlet = "^3.0.3"
+fyers-apiv3 = "^3.1.1"
 
 
 [build-system]

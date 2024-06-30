@@ -10,11 +10,12 @@ from sqlalchemy.dialects.postgresql import insert
 
 from . import models, schemas, constants, types, utils, controllers
 from .database import SessionLocal, engine
-from fyers_api import accessToken, fyersModel
+from fyers_apiv3 import fyersModel
 
 
 app = FastAPI()
 
+global fyers_session
 
 def get_db():
     db = SessionLocal()
@@ -26,14 +27,17 @@ def get_db():
 
 @app.get("/")
 def generate_fyers_auth_code():
-    session = accessToken.SessionModel(
+    global fyers_session
+    fyers_session = fyersModel.SessionModel(
         client_id=constants.fyers_app_id,
         secret_key=constants.fyers_secret_id,
         redirect_uri=constants.fyers_redirect_url,
         response_type="code",
+        grant_type = "authorization_code",
+        state = "sample"
     )
 
-    redirect_url = session.generate_authcode()
+    redirect_url = fyers_session.generate_authcode()
     return RedirectResponse(redirect_url)
 
 
@@ -42,15 +46,9 @@ def authenticate_fyers(auth_code: str = "", db: Session = Depends(get_db)):
     if not auth_code:
         return "No auth code provided!"
 
-    session = accessToken.SessionModel(
-        client_id=constants.fyers_app_id,
-        secret_key=constants.fyers_secret_id,
-        redirect_uri=constants.fyers_redirect_url,
-        response_type="code",
-        grant_type="authorization_code",
-    )
-    session.set_token(auth_code)
-    response = session.generate_token()
+    global fyers_session
+    fyers_session.set_token(auth_code)
+    response = fyers_session.generate_token()
 
     access_token: str = response.get("access_token", "")
     if not access_token:
@@ -187,6 +185,8 @@ def update_stock_data(start_year: int = 2001, stock_symbol: str = "NSE:NIFTY50-I
 
         if not isinstance(response, dict):
             return {"error": "Invalid response from fyers!", "response": response}
+        if not "candles" in response:
+            return {"error": "Invalid response from fyers!", "response": response}
 
         candle_list.extend(response.get("candles", []))
 
@@ -202,6 +202,8 @@ def update_stock_data(start_year: int = 2001, stock_symbol: str = "NSE:NIFTY50-I
         }
         for candle in candle_list
     ]
+
+    print("history_data", len(history_data))
 
     db.bulk_insert_mappings(models.SymbolHistory, history_data)
     db.commit()
