@@ -1,6 +1,5 @@
 import datetime
 import calendar
-from typing import Union
 from collections import OrderedDict
 
 from fastapi import Depends, FastAPI
@@ -8,8 +7,8 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
 
-from . import models, schemas, constants, types, utils, controllers
-from .database import SessionLocal, engine
+from . import models, constants, types, utils, controllers
+from .database import SessionLocal
 from fyers_apiv3 import fyersModel
 
 
