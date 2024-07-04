@@ -1,19 +1,20 @@
 # analyze-stocks
 
+##### Installation
+```sh
+poetry shell
+poetry install 
+```
+update alembic.ini db creds and env.py metadata
+
 ##### Usage
 ```sh
 hypercorn app.main:app --reload -b 127.0.0.1:3000
 ```
 
-##### Initial Setup
-```sh
-alembic init alembic
-```
-update alembic.ini db creds and env.py metadata
-
 ##### Create Migrations/revision
 ```sh
-alembic revision --autogenerate -m "init revision"
+alembic revision --autogenerate -m "<Name of the migration>"
 ```
 
 ##### Migrate
